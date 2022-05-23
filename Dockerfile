@@ -1,4 +1,4 @@
-FROM golang:latest 
+FROM golang:latest as main
 
 # Set necessary environmet variables needed for our image
 ENV GO111MODULE=on \
@@ -17,3 +17,9 @@ RUN go build main.go
 EXPOSE 4000
 
 CMD ["./main"]
+
+FROM main as testing
+
+CMD go test
+
+FROM main

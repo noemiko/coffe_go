@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  web:
+    container_name: drinksMachine
+    build: ./
+    ports:
+      - "4000:4000"
+  godoc:
+    
+    build:
+      context: .
+      dockerfile: DockerfileGodoc
+    ports:
+      - "6060:6060"
+    container_name: godoc-server

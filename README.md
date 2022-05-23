@@ -22,3 +22,5 @@ curl -X POST -H "Content-Type: application/json" -d '{"command":"H:2:1"}' http:/
 
 ```
 
+https://simcap.github.io/coffeemachine/cm-first-iteration.html
+

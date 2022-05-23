@@ -1,0 +1,10 @@
+FROM golang:latest
+
+RUN go install -v golang.org/x/tools/cmd/godoc@latest
+
+WORKDIR $GOROOT/bin
+
+COPY ./code .
+
+EXPOSE 6060
+CMD godoc -http=:6060

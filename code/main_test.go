@@ -13,13 +13,13 @@ import (
 )
 
 func TestHistoryOfCommands(t *testing.T) {
-	//Thist test should run first, 
-	// because implement history remember all
+	//Thist test should run first,
+	// because implement history of commands remember all
 	// commands from previous tests
 
-	historyOfCommands := [] string {"T:1:0", "T:2:0", "foo"}
-	expectedOut:= "T:1:0, T:2:0, foo, M:message-content"
-	for _, command := range historyOfCommands{
+	historyOfCommands := []string{"T:1:0", "T:2:0", "foo"}
+	expectedOut := "T:1:0, T:2:0, foo, M:message-content"
+	for _, command := range historyOfCommands {
 		sendToDrinkMachineCommand(command)
 	}
 	responseCode, messageResponse := sendToDrinkMachineCommand("M:message-content")
@@ -104,5 +104,3 @@ func TestDrinksMachineCommands(t *testing.T) {
 		assert.Equal(t, useCase.expectedOut, messageResponse)
 	}
 }
-
-
