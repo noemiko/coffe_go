@@ -1,6 +1,9 @@
 # coffe_go
-go mod init github.com/noemiko/coffe_go
-go build main.go
+<!-- go mod init github.com/noemiko/coffe_go
+go build main.go -->
+
+Read about go
+https://go.dev/doc/faq#Is_Go_an_object-oriented_language
 
 How to build
 ```

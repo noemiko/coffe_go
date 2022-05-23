@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/noemiko/coffe_go/machine"
 )
@@ -17,7 +18,7 @@ type APIResponseBody struct {
 	Value string `json:"response"`
 }
 
-//Logic to get command and retrieve message from machine
+//Logic to get post command and retrieve message from machine
 func PostMethod(c *gin.Context) {
 	var command APICommandBody
 

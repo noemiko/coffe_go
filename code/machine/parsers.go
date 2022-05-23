@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func parseResponseToDrinkProperties(rawCommand string) *DrinkProps {
+func parseToDrinkProperties(rawCommand string) *DrinkProps {
 	splittedCommand := strings.Split(rawCommand, ":")
 	var isStick bool
 	lastElement := splittedCommand[2]
@@ -28,7 +28,7 @@ func parseResponseToDrinkProperties(rawCommand string) *DrinkProps {
 	return drinkProps
 }
 
-func parseResponseToOperationalProperties(rawCommand string) *OperationalProps {
+func parseToOperationalProperties(rawCommand string) *OperationalProps {
 	operationalProps := &OperationalProps{
 		Type:    rawCommand[0:1],
 		Details: rawCommand[2:],

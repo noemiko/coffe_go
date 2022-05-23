@@ -18,7 +18,7 @@ func getDrinkMessage(drinkProp *DrinkProps) string {
 
 func getOperationalMessage(operationalProp *OperationalProps) string {
 	if operationalProp.Type == "M" && operationalProp.Details == "message-content" {
-		return "Drink maker forwards any message received onto the coffee machine interface for the customer to see"
+		return GetComandsHistory()
 	}
 	return UnknownCommandMessage
 }

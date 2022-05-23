@@ -14,43 +14,74 @@ type OperationalProps struct {
 	Details string
 }
 
-
 const (
-	DrinkCommandType       string = "DrinkCommand"
-	OperationalCommandType string = "OperationalCommand"
-	UnknownCommandType     string = "UnknowCommand"
-
 	UnknownCommandMessage string = "Unknown command"
 )
 
-//Recognize type of command based on numer of :
-func getTypeOfCommand(rawCommand string) string {
-	splittedCommand := strings.Split(rawCommand, ":")
-	if len(splittedCommand) == 3 {
-		return DrinkCommandType
-	} else if len(splittedCommand) == 2 {
-		return OperationalCommandType
-	}
-	return UnknownCommandType
+type Command struct {
+	raw        string
+	structured interface{} // OperationalProps or DrinkProps
+	message    string
 }
 
+func newDrinkCommand(rawCommand string) *Command {
+	invalidFields := validateDrinkCommand(rawCommand)
+	message := ""
 
-//Recognize type of command and send proper message
-func Execute(rawCommand string) string {
-	commandType := getTypeOfCommand(rawCommand)
-	if commandType == DrinkCommandType {
-		invalidFields := validateDrinkCommand(rawCommand)
-		if invalidFields != "" {
-			return "Unknown information about " + invalidFields
-		}
+	drinkProp := parseToDrinkProperties(rawCommand)
 
-		drinkProp := parseResponseToDrinkProperties(rawCommand)
-		return getDrinkMessage(drinkProp)
-
-	} else if commandType == OperationalCommandType {
-		operationalProp := parseResponseToOperationalProperties(rawCommand)
-		return getOperationalMessage(operationalProp)
+	if invalidFields != "" {
+		message = "Unknown information about " + invalidFields
 	} else {
-		return UnknownCommandMessage
+		message = getDrinkMessage(drinkProp)
 	}
+	return &Command{
+		raw:        rawCommand,
+		structured: drinkProp,
+		message:    message,
+	}
+
+}
+
+func newOperationalCommand(rawCommand string) *Command {
+	operationalProp := parseToOperationalProperties(rawCommand)
+	message := getOperationalMessage(operationalProp)
+	return &Command{
+		raw:        rawCommand,
+		structured: operationalProp,
+		message:    message,
+	}
+}
+
+//in Unknown Comand is hard to recognize structure
+// that why it is empty
+func newUnknownCommand(rawCommand string) *Command {
+	return &Command{
+		raw:        rawCommand,
+		structured: "",
+		message:    UnknownCommandMessage,
+	}
+}
+
+func (c Command) getMessage() string {
+	return c.message
+}
+
+//Fabric with commands
+//Recognize type of command based on numer of :
+func getProperCommandStruct(rawCommand string) *Command {
+	splittedCommand := strings.Split(rawCommand, ":")
+	if len(splittedCommand) == 3 {
+		return newDrinkCommand(rawCommand)
+	} else if len(splittedCommand) == 2 {
+		return newOperationalCommand(rawCommand)
+	}
+	return newUnknownCommand(rawCommand)
+}
+
+//run machine and get response about result
+func Execute(rawCommand string) string {
+	updateHistory(rawCommand)
+	commandStruct := getProperCommandStruct(rawCommand)
+	return commandStruct.getMessage()
 }

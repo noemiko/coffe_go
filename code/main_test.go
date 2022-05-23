@@ -12,6 +12,40 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestHistoryOfCommands(t *testing.T) {
+	//Thist test should run first, 
+	// because implement history remember all
+	// commands from previous tests
+
+	historyOfCommands := [] string {"T:1:0", "T:2:0", "foo"}
+	expectedOut:= "T:1:0, T:2:0, foo, M:message-content"
+	for _, command := range historyOfCommands{
+		sendToDrinkMachineCommand(command)
+	}
+	responseCode, messageResponse := sendToDrinkMachineCommand("M:message-content")
+	assert.Equal(t, 200, responseCode)
+	assert.Equal(t, expectedOut, messageResponse)
+
+}
+
+func TestSendPostWithoutBody(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	r := gin.Default()
+	r.POST("/drink", PostMethod)
+
+	req, err := http.NewRequest(http.MethodPost, "/drink", bytes.NewBuffer([]byte{}))
+	if err != nil {
+		fmt.Printf("Couldn't create request: %v \n", err)
+	}
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, req)
+	var responseBody APIResponseBody
+	json.Unmarshal(response.Body.Bytes(), &responseBody)
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, "Unknown command", responseBody.Value)
+}
+
 func sendToDrinkMachineCommand(command string) (int, string) {
 	requestBody := &APICommandBody{
 		Value: command,
@@ -54,9 +88,9 @@ func TestDrinksMachineCommands(t *testing.T) {
 		{"H:ggg:ggg", "Unknown information about sugar, stick"},
 		{"L::", "Unknown information about drink"},
 		{"H:2:1:5", "Unknown command"},
+		{"M:foo", "Unknown command"},
 
 		{"C", "Unknown command"},
-
 		{":::foo", "Unknown command"},
 		{"", "Unknown command"},
 		{"foo::::", "Unknown command"},
@@ -70,3 +104,5 @@ func TestDrinksMachineCommands(t *testing.T) {
 		assert.Equal(t, useCase.expectedOut, messageResponse)
 	}
 }
+
+
