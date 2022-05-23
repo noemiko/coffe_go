@@ -53,7 +53,7 @@ func newOperationalCommand(rawCommand string) *Command {
 	}
 }
 
-//in Unknown Comand is hard to recognize structure
+// in Unknown Comand is hard to recognize structure
 // that why it is empty
 func newUnknownCommand(rawCommand string) *Command {
 	return &Command{
@@ -67,8 +67,8 @@ func (c Command) getMessage() string {
 	return c.message
 }
 
-//Fabric with commands
-//Recognize type of command based on numer of :
+// Fabric with commands
+// Recognize type of command based on numer of :
 func getProperCommandStruct(rawCommand string) *Command {
 	splittedCommand := strings.Split(rawCommand, ":")
 	if len(splittedCommand) == 3 {
@@ -79,7 +79,7 @@ func getProperCommandStruct(rawCommand string) *Command {
 	return newUnknownCommand(rawCommand)
 }
 
-//run machine and get response about result
+// run machine and get response about result
 func Execute(rawCommand string) string {
 	updateHistory(rawCommand)
 	commandStruct := getProperCommandStruct(rawCommand)
